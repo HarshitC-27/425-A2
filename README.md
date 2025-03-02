@@ -102,9 +102,26 @@ Time taken: 0.011 seconds
 ## Code Structure
 
 - `send_dns_query(server, domain)`: Sends a DNS query to a specified server.
+    Completing send_dns_query(server, domain) (TODO: Send the query using UDP)
+    Objective: This function sends a DNS query to the given server using UDP and return the response, by using dns.query.udp() to send the query and return the response.
 - `extract_next_nameservers(response)`: Extracts and resolves the next set of nameservers from the DNS response.
+     Completing extract_next_nameservers(response) (TODO: Resolve NS hostnames to IP addresses)
+     Objective: This function extracts NS (Name Server) records from the Authority Section of the response and resolves them to their IP addresses:
+     It extract NS records from response.authority.
+     Resolve NS hostnames to IP addresses using dns.resolver.resolve().
+     Return the list of resolved IP addresses.
 - `iterative_dns_lookup(domain)`: Performs iterative DNS resolution.
+     Completing iterative_dns_lookup(domain) (TODO: Move to the next resolution stage)
+     Objective: This function performs iterative DNS lookup by:
+     Starting from the root DNS servers.
+     Querying each level (ROOT → TLD → AUTH).
+     Extracting and resolving nameservers at each step.
+     Handling CNAME records before reaching the final A record.
+     Updated the stage as we move through Root → TLD → Authoritative.
 - `recursive_dns_lookup(domain)`: Performs recursive DNS resolution using the system's default resolver.
+   Completing recursive_dns_lookup(domain) (TODO: Perform recursive resolution)
+   Objective: This function performs recursive DNS resolution using the system's default resolver.
+   Use dns.resolver.resolve() to fetch the result directly.
 
 ## Error Handling
 
