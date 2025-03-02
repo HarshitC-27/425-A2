@@ -21,6 +21,55 @@ This project implements a DNS resolver that supports both **iterative** and **re
    pip install dnspython
    ```
 
+## Code Structure
+
+#### 1. send_dns_query(server, domain)
+
+- **Purpose**: Sends a DNS query to a specified server.
+- **Input**:
+  - `server`: The IP address of the DNS server to query.
+  - `domain`: The domain name to resolve.
+- **Completing the code**:  
+   Send a DNS query to the given server using UDP and return the response, by using dns.query.udp() to send the query and return the response.
+- **Output**: Returns the DNS response if successful, otherwise returns `None`.
+
+#### 2. extract_next_nameservers(response)
+
+- **Purpose**: Extracts and resolves the next set of nameservers from the DNS response.
+- **Input**:
+  - `response`: The DNS response object from a previous query.
+- **Completing the code**: This function extracts NS (Name Server) records from the Authority Section of the response and resolves them to their IP addresses:
+     - It extract NS records from response.authority. 
+     - Resolve NS hostnames to IP addresses using dns.resolver.resolve().
+     - Return the list of resolved IP addresses.
+- **Output**: Returns a list of IP addresses for the next set of authoritative nameservers.
+
+#### 3. iterative_dns_lookup(domain)
+
+- **Purpose**: Performs iterative DNS resolution.
+- **Input**:
+  - `domain`: The domain name to resolve.
+- **Completeing the code**:
+  This function performs iterative DNS lookup by:
+     - Starting from the root DNS servers.
+     - Querying each level (ROOT → TLD → AUTH).
+     - Extracting and resolving nameservers at each step.
+     - Updated the stage as we move through Root → TLD → Authoritative.
+- **Output**:
+  - Prints the resolved IP address if found.
+
+#### 4. recursive_dns_lookup(domain)
+
+- **Purpose**: Performs recursive DNS resolution using the system's default resolver.
+- **Input**:
+  - `domain`: The domain name to resolve.
+- **Completing the code**:
+  - This function performs recursive DNS resolution using the system's default resolver.
+   - Use dns.resolver.resolve() to fetch the result directly.
+   - Before resolving the final IP address, the commented code can be used to print the intermediate NS hostnames.
+- **Output**:
+  - Prints the resolved IP address if found.
+
 ## Usage
 
 The script accepts two command-line arguments:
@@ -99,30 +148,6 @@ Time taken: 0.600 seconds
 Time taken: 0.011 seconds
 ```
 
-## Code Structure
-
-- `send_dns_query(server, domain)`: Sends a DNS query to a specified server.
-    Completing send_dns_query(server, domain) (TODO: Send the query using UDP)
-    This function sends a DNS query to the given server using UDP and return the response, by using dns.query.udp() to send the query and return the response.
-- `extract_next_nameservers(response)`: Extracts and resolves the next set of nameservers from the DNS response.
-     Completing extract_next_nameservers(response) (TODO: Resolve NS hostnames to IP addresses)
-     This function extracts NS (Name Server) records from the Authority Section of the response and resolves them to their IP addresses:
-     - It extract NS records from response.authority. 
-     - Resolve NS hostnames to IP addresses using dns.resolver.resolve().
-     - Return the list of resolved IP addresses.
-- `iterative_dns_lookup(domain)`: Performs iterative DNS resolution.
-     Completing iterative_dns_lookup(domain) (TODO: Move to the next resolution stage)
-     This function performs iterative DNS lookup by:
-     - Starting from the root DNS servers.
-     - Querying each level (ROOT → TLD → AUTH).
-     - Extracting and resolving nameservers at each step.
-     - Updated the stage as we move through Root → TLD → Authoritative.
-- `recursive_dns_lookup(domain)`: Performs recursive DNS resolution using the system's default resolver.
-   Completing recursive_dns_lookup(domain) (TODO: Perform recursive resolution)
-   - This function performs recursive DNS resolution using the system's default resolver.
-   - Use dns.resolver.resolve() to fetch the result directly.
-   - Before resolving the final IP address, the commented code can be used to print the intermediate NS hostnames.
-  
 ## Error Handling
 
 The script handles the following errors:
@@ -269,42 +294,6 @@ Resolved b.iana-servers.net. to 199.43.133.53
 [SUCCESS] example.com -> 23.192.228.80
 Time taken: 0.818 seconds
 ```
-
-## Code Structure
-
-#### 1. send_dns_query(server, domain)
-
-- **Purpose**: Sends a DNS query to a specified server.
-- **Input**:
-  - `server`: The IP address of the DNS server to query.
-  - `domain`: The domain name to resolve.
-- **Output**: Returns the DNS response if successful, otherwise returns `None`.
-
-#### 2. extract_next_nameservers(response)
-
-- **Purpose**: Extracts and resolves the next set of nameservers from the DNS response.
-- **Input**:
-  - `response`: The DNS response object from a previous query.
-- **Output**: Returns a list of IP addresses for the next set of authoritative nameservers.
-
-#### 3. iterative_dns_lookup(domain)
-
-- **Purpose**: Performs iterative DNS resolution.
-- **Input**:
-  - `domain`: The domain name to resolve.
-- **Behavior**:
-  - Starts resolution from the root DNS servers.
-  - Queries root servers, TLD servers, and authoritative servers in sequence.
-  - Prints the resolved IP address if found.
-
-#### 4. recursive_dns_lookup(domain)
-
-- **Purpose**: Performs recursive DNS resolution using the system's default resolver.
-- **Input**:
-  - `domain`: The domain name to resolve.
-- **Behavior**:
-  - Delegates the resolution process to the system's default resolver.
-  - Prints the resolved IP address if found.
 
 ## Contributors
 
